@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>左侧菜单</title>
+		<link rel="stylesheet" type="text/css" href="jquery.scrollbar.css"/>
+		<link rel="stylesheet" type="text/css" href="menu.css"/>
+	</head>
+	<body -style="padding: 50px;">
+		<div class="menu-wrap">
+				<div class="scrollbar-inner" >
+					<ul class="menu-cont" >
+						<li class="first-menu">
+							<a href="###" class="menu-item">陌生人</a>
+							<ul class="sub-list">
+								<li class="sub-menu"><a href="###" class="menu-item">张三1</a></li>
+								<li class="sub-menu haslast"><a href="###" class="menu-item">张三2<span class="icon-r">></span></a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">张三3</a></li>
+							</ul>
+						</li>
+						<li class="first-menu">
+							<a href="###" class="menu-item">我的好友</a>
+							<ul class="sub-list">
+								<li class="sub-menu haslast"><a href="###" class="menu-item">张三1<span class="icon-r">></span></a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">张三2</a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">张三3</a></li>
+							</ul>
+						</li>
+			
+						<li class="first-menu">
+							<a href="###" class="menu-item">大学同学</a>
+							<ul class="sub-list">
+								<li class="sub-menu"><a href="###" class="menu-item">李四1</a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">李四2</a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">李四3</a></li>
+								<li class="sub-menu haslast"><a href="###" class="menu-item">李四4<span class="icon-r">></span></a></li>
+							</ul>
+						</li>
+						<li class="first-menu">
+							<a href="###" class="menu-item">高中同学</a>
+							<ul class="sub-list">
+								<li class="sub-menu"><a href="###" class="menu-item">王五1</a></li>
+								<li class="sub-menu haslast"><a href="###" class="menu-item">王五2<span class="icon-r">></span></a></li>
+							</ul>
+						</li>
+						<li class="first-menu">
+							<a href="###" class="menu-item">初中同学</a>
+							<ul class="sub-list">
+								<li class="sub-menu haslast"><a href="###" class="menu-item">李四1<span class="icon-r">></span></a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">李四2</a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">李四3</a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">李四4</a></li>
+							</ul>
+						</li>
+						<li class="first-menu">
+							<a href="###" class="menu-item">小学同学</a>
+							<ul class="sub-list">
+								<li class="sub-menu haslast"><a href="###" class="menu-item">王五1<span class="icon-r">></span></a></li>
+								<li class="sub-menu"><a href="###" class="menu-item">王五2</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			<div class="last-menu">
+				<a href="###" class="menu-item">李四1</a>
+				<a href="###" class="menu-item">李四1</a>
+				<a href="###" class="menu-item">李四1</a>
+			</div>
+		</div>
+		
+		<script src="jquery-1.7.2.js" type="text/javascript" charset="utf-8"></script>
+		<script src="jquery.scrollbar.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				//滚动条初始化
+				$('.scrollbar-inner').scrollbar();
+				/*菜单交互*/
+				var timer,
+				    allMenu = $(".menu-item"),
+				    lastMenu = $(".last-menu"),
+			    	menuWrap = $(".menu-cont");
+			    	
+			    menuWrap.on("click",".first-menu",function(){
+			    	allMenu.removeClass("active")
+			    	$(this).children(".sub-list").slideToggle();
+			    	$(this).children(".menu-item").addClass("active");
+			    	var sT =$(this).offset().top;
+			    	var scrT=$(this).parents(".scroll-content").scrollTop();
+		    		console.log(scrT);
+		    		if(sT >90){
+		    			$(this).parents(".scroll-content").animate({scrollTop:scrT + 150},300);
+		    		}
+			    }).on("mouseenter",".sub-menu",function(){
+			    	if($(this).hasClass("haslast")) {
+			    		selectedLastMenu=allMenu.parent().index($(this));
+			    		var t = this.getBoundingClientRect().top;//不包含页面看不见的部分
+			    		var h = lastMenu.outerHeight();
+		                if ((t + h) > menuWrap.outerHeight()) {
+		                    t = menuWrap.outerHeight() - h;
+		                }
+		    			lastMenu.css({ "top": t, visibility: "visible" }).animate({"opacity":"1"},300);
+			    	}else {
+		                lastMenu.css({ visibility: "hidden","opacity":"0"});
+		            }
+			    }).on("click",".sub-menu",function(e){
+			    	e.stopPropagation();
+			    	allMenu.removeClass("active")
+			    	$(this).children(".menu-item").addClass("active");
+			    });
+			    $(".haslast").mouseleave(function(){
+			    	timer=setTimeout(function(){
+			    		lastMenu.css({ visibility: "hidden","opacity":"0"});
+			    	},50)
+			    })
+			    //三级菜单单击或鼠标离开后隐藏
+			    lastMenu.on("click",".menu-item",function(){
+			     	allMenu.removeClass("active");
+			     	allMenu.eq(selectedLastMenu).addClass("active");
+			     	lastMenu.css({ visibility: "hidden","opacity":"0"});
+			    }).on("mouseleave",function(){
+		            lastMenu.css({ visibility: "hidden" ,"opacity":"0"});
+		        }).on("mouseenter",function(){
+		            clearTimeout(timer);
+		        });
+			})
+		</script>
+	</body>
+
+</html>
